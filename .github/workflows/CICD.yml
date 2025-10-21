@@ -28,16 +28,16 @@ jobs:
 
       - name: Build Docker image (tagged with IMAGE_NAME)
         run: |
-          docker build -t $IMAGE_NAME app.py
+          docker build -t $IMAGE_NAME .
           docker image ls $IMAGE_NAME
 
       - name: Run container and test /health
         run: |
           # run image tagged with $IMAGE_NAME, map container 8088 -> runner 8088
           docker run -d --name drviki-ci -p 8088:8088 $IMAGE_NAME
-          sleep 3
+          sleep 10
           # test the health endpoint
-          curl -v --retry 5 --retry-delay 1 --max-time 10 http://localhost:8088/health
+          curl -v --retry 5 --retry-delay 2 --max-time 10 http://localhost:8088/health
           docker rm -f drviki-ci
 
       - name: Push image to DockerHub
