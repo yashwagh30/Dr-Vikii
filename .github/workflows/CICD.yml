@@ -43,8 +43,17 @@ jobs:
       - name: Push image to DockerHub
         run: docker push $IMAGE_NAME
 
+      - name: Check if SSH deployment is configured
+        id: check_ssh
+        run: |
+          if [ -n "${{ secrets.SSH_HOST }}" ]; then
+            echo "ssh_configured=true" >> $GITHUB_OUTPUT
+          else
+            echo "ssh_configured=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Deploy to remote host via SSH
-        if: ${{ secrets.SSH_HOST != '' }}
+        if: steps.check_ssh.outputs.ssh_configured == 'true'
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
