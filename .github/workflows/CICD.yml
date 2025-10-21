@@ -28,7 +28,7 @@ jobs:
 
       - name: Build Docker image (tagged with IMAGE_NAME)
         run: |
-          docker build -t $IMAGE_NAME ./app
+          docker build -t $IMAGE_NAME app.py
           docker image ls $IMAGE_NAME
 
       - name: Run container and test /health
